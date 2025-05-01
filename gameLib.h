@@ -4,4 +4,4 @@ class gameLib {
     public:
         DisplayLib(Adafruit_SH1106G* displayObject); 
 
-}
+};
