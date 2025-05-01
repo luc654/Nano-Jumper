@@ -65,7 +65,7 @@ void GameLib::updateScreen(){
 
 
 //  
-// Privatea
+// Private
 // 
 
 
