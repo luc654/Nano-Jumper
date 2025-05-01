@@ -5,8 +5,10 @@ class GameLib {
         GameLib(Adafruit_SH1106G* displayObject);
         void print(); 
         void begin(); 
+        void updateScreen();
         void addText(int xPos, int yPos, const char* content);
-
+        
     private:
-    Adafruit_SH1106G* _display;
+        Adafruit_SH1106G* _display;
+        void displayText(int xPos, int yPos, const char* content);
 };
