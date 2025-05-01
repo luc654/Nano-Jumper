@@ -65,8 +65,9 @@ void GameLib::updateScreen(){
 
 
 //  
-// Private
+// Privatea
 // 
+
 
 
 void GameLib::handleElem(Object element){
