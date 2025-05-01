@@ -45,9 +45,11 @@ void GameLib::addText(int xPos, int yPos, const char* content){
 
     screenElements[id].xPos = xPos;
     screenElements[id].yPos = yPos;
+    screenElements[id].data.textProperties = txt;
     screenElements[id].id = id;
     screenElements[id].type = TEXT;
 
+    
     id++;
 }
 
@@ -56,6 +58,9 @@ void GameLib::updateScreen(){
     for (int16_t index = 0; index < maxElem; index++ ){
         handleElem(screenElements[index]);
     }
+    
+    _display->display();
+    
 };
 
 
@@ -67,19 +72,17 @@ void GameLib::updateScreen(){
 void GameLib::handleElem(Object element){
     switch(element.type){
         case TEXT:
-            displayText(element.xPos, element.yPos, element.data.textProperties.content);
+        displayText(element.xPos, element.yPos, element.data.textProperties.content);
         break;
-
+        
         default:
+        
         break;
     }
 }
 
 void GameLib::displayText(int xPos, int yPos, const char* content){
-    Serial.println(xPos);
-    Serial.println(yPos);
-    Serial.println(content);
-    _display->setCursor(10, 10);
-    _display->println("AAA");
+    _display->setCursor(xPos, yPos);
+    _display->println(content);
 }
 
