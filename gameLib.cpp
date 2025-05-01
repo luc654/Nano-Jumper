@@ -14,6 +14,9 @@ struct TextProperties{
 struct Object{
     int xPos;
     int yPos;
+    int weight;
+    float velocity;
+    bool affectGravity;
     int id;
     ElementType type;
     union {
@@ -38,13 +41,16 @@ void GameLib::begin() {
   }
 
 
-void GameLib::addText(int xPos, int yPos, const char* content){
+void GameLib::addText(int xPos, int yPos, const char* content, int weight, float velocity, bool affectGravity){
     if (id > maxElem) { return;};
     
     TextProperties txt = {content};
 
     screenElements[id].xPos = xPos;
     screenElements[id].yPos = yPos;
+    screenElements[id].weight = weight;
+    screenElements[id].velocity = velocity;
+    screenElements[id].affectGravity = affectGravity;
     screenElements[id].data.textProperties = txt;
     screenElements[id].id = id;
     screenElements[id].type = TEXT;
@@ -55,7 +61,11 @@ void GameLib::addText(int xPos, int yPos, const char* content){
 
 
 void GameLib::updateScreen(){
+    _display->clearDisplay();
     for (int16_t index = 0; index < maxElem; index++ ){
+        if(screenElements[index].affectGravity){
+            calcGravity(screenElements[index]);
+        }
         handleElem(screenElements[index]);
     }
     
@@ -68,7 +78,16 @@ void GameLib::updateScreen(){
 // Private
 // 
 
+void GameLib::calcGravity(Object element){
+    if(element.velocity == 0){
+        element.velocity = 1;
+    } else {
+        element.velocity = element.velocity * element.weight;
+    }
 
+    screenElements[element.id].velocity = element.velocity;
+    screenElements[element.id].yPos = element.yPos - element.velocity;
+}
 
 void GameLib::handleElem(Object element){
     switch(element.type){
