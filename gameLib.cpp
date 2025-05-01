@@ -28,15 +28,13 @@ GameLib::GameLib(Adafruit_SH1106G* displayObject){
     _display = displayObject;
 };
 
-void GameLib::print(){
-    Serial.println("testdd");
-};
 
 void GameLib::begin() {
-    _display->begin(0x3c, true);
+    _display->begin();
     _display->clearDisplay();
     _display->setTextSize(1);
     _display->setTextColor(SH110X_WHITE);
+    _display->display();
   }
 
 
@@ -53,8 +51,11 @@ void GameLib::addText(int xPos, int yPos, const char* content){
     id++;
 }
 
-void GameLib::updateScreen(){
 
+void GameLib::updateScreen(){
+    for (int16_t index = 0; index < maxElem; index++ ){
+        handleElem(screenElements[index]);
+    }
 };
 
 
@@ -63,8 +64,22 @@ void GameLib::updateScreen(){
 // 
 
 
+void GameLib::handleElem(Object element){
+    switch(element.type){
+        case TEXT:
+            displayText(element.xPos, element.yPos, element.data.textProperties.content);
+        break;
 
-// void displayText(int xPos, int yPos, const char* content){
-//     _display->setCursor(xPos, yPos);
-//     _display->println(content);
-// }
+        default:
+        break;
+    }
+}
+
+void GameLib::displayText(int xPos, int yPos, const char* content){
+    Serial.println(xPos);
+    Serial.println(yPos);
+    Serial.println(content);
+    _display->setCursor(10, 10);
+    _display->println("AAA");
+}
+

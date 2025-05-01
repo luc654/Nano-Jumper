@@ -8,7 +8,8 @@ class GameLib {
         void updateScreen();
         void addText(int xPos, int yPos, const char* content);
         
-    private:
+        private:
         Adafruit_SH1106G* _display;
         void displayText(int xPos, int yPos, const char* content);
+        void handleElem(struct Object );
 };
