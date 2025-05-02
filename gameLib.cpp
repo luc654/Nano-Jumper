@@ -82,13 +82,17 @@ void GameLib::calcGravity(Object element){
     if(element.velocity == 0){
         element.velocity = 1;
     } else {
-        // Calculate y pos based on formula; y pos  = y pos -  velocity * (100 + weight) / 100
+        // Gravity formula
         element.velocity = element.velocity * (100 + element.weight) / 100;
     }
 
+    if (element.velocity > 20){
+        element.velocity = 20;
+    }
+    
+    Serial.println(element.velocity);
     screenElements[element.id].velocity = element.velocity;
-
-    screenElements[element.id].yPos = element.yPos - element.velocity;
+    screenElements[element.id].yPos = element.yPos + element.velocity;
 }
 
 void GameLib::handleElem(Object element){
