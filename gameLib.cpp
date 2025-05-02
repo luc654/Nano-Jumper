@@ -41,23 +41,23 @@ void GameLib::begin() {
   }
 
 
-void GameLib::addText(int xPos, int yPos, const char* content, int weight, float velocity, bool affectGravity){
-    if (id > maxElem) { return;};
-    
-    TextProperties txt = {content};
+  void GameLib::addText(const TextOptions& options) {
+    if (id > maxElem) { return; }
 
-    screenElements[id].xPos = xPos;
-    screenElements[id].yPos = yPos;
-    screenElements[id].weight = weight;
-    screenElements[id].velocity = velocity;
-    screenElements[id].affectGravity = affectGravity;
+    TextProperties txt = { options.getText() };
+
+    screenElements[id].xPos = options.getX();
+    screenElements[id].yPos = options.getY();
+    screenElements[id].weight = options.weight;
+    screenElements[id].velocity = 0;
+    screenElements[id].affectGravity = options.affectGravity;
     screenElements[id].data.textProperties = txt;
     screenElements[id].id = id;
     screenElements[id].type = TEXT;
 
-    
     id++;
 }
+
 
 
 void GameLib::updateScreen(){
@@ -80,7 +80,7 @@ void GameLib::updateScreen(){
 
 void GameLib::calcGravity(Object element){
     if(element.velocity == 0){
-        element.velocity = 1;
+        element.velocity = 2;
     } else {
         // Gravity formula
         element.velocity = element.velocity * (100 + element.weight) / 100;
@@ -90,7 +90,6 @@ void GameLib::calcGravity(Object element){
         element.velocity = 20;
     }
     
-    Serial.println(element.velocity);
     screenElements[element.id].velocity = element.velocity;
     screenElements[element.id].yPos = element.yPos + element.velocity;
 }

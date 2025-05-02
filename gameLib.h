@@ -1,16 +1,76 @@
 #include <Adafruit_SH110X.h> 
 
-class GameLib {
+
+class TextOptions {
+    private:
+        int x = 0;
+        int y = 0;
+        int weight = 0;
+        const char* text = "";
+        bool affectGravity = false;
+    
     public:
-        GameLib(Adafruit_SH1106G* displayObject);
-        void print(); 
-        void begin(); 
-        void updateScreen();
-        void addText(int xPos, int yPos, const char* content, int weight, float velocity, bool affectGravity);
-        
-        private:
-        Adafruit_SH1106G* _display;
-        void displayText(int xPos, int yPos, const char* content);
-        void handleElem(struct Object);
-        void calcGravity(struct Object);
-};
+        TextOptions& setPosition(int x, int y) {
+            this->x = x;
+            this->y = y;
+            return *this;
+        }
+    
+        TextOptions& setContent(const char* t) {
+            this->text = t;
+            return *this;
+        }
+    
+    
+        TextOptions& setWeight(int weight) {
+            this->weight = weight;
+            return *this;
+        }
+
+        TextOptions& setAffectGravity(bool affect) {
+            this->affectGravity = affect;
+            return *this;
+        }
+
+        int getX() const {
+            return this->x;
+        }
+    
+        int getY() const {
+            return this->y;
+        }
+
+        int getWeight() const {
+            return this->weight;
+        }
+    
+        const char* getText() const {
+            return this->text;
+        }
+    
+        bool affectsGravity() const {
+            return this->affectGravity;
+        }
+    
+        friend class GameLib;
+    };
+    
+
+
+
+
+    class GameLib {
+        public:
+            GameLib(Adafruit_SH1106G* displayObject);
+            void print(); 
+            void begin(); 
+            void updateScreen();
+            void addText(const TextOptions& opts);
+            
+            private:
+            Adafruit_SH1106G* _display;
+            void displayText(int xPos, int yPos, const char* content);
+            void handleElem(struct Object);
+            void calcGravity(struct Object);
+    };
+    
