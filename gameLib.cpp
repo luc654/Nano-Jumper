@@ -7,12 +7,16 @@
 
 
 int16_t id = 0;
-enum ElementType { TEXT };
+enum ElementType { TEXT, BLOCK };
 
 struct TextProperties{
     const char* content;
 };
-
+struct BlockProperties{
+    bool collision;
+    int endX;
+    int endY;
+};
 struct Object{
     int xPos;
     int yPos;
@@ -27,6 +31,7 @@ struct Object{
     ElementType type;
     union {
         TextProperties textProperties;
+        BlockProperties blockProperties;
     } data;
 };
 
@@ -39,15 +44,19 @@ GameLib::GameLib(Adafruit_SH1106G* displayObject){
 
 
 void GameLib::begin() {
-    _display->begin();
+    Serial.println("begin");
+    _display->begin(0x3C, true);
+    Serial.println("after display.begin()");
     _display->clearDisplay();
     _display->setTextSize(1);
     _display->setTextColor(SH110X_WHITE);
     _display->display();
+
   }
 
 
   void GameLib::addText(const TextOptions& options) {
+    Serial.println("addText");
     if (id > maxElem) { return; }
 
     TextProperties txt = { options.getText() };
@@ -67,9 +76,29 @@ void GameLib::begin() {
     id++;
 }
 
+void GameLib::addBlock(const BlockOptions& options){
+    Serial.println("addBlock");
+    if (id > maxElem) { return; }
+    BlockProperties blk = { options.hasCollision(), options.getEndX(), options.getEndY() };
+    
+    screenElements[id].xPos = options.getStartX();
+    screenElements[id].yPos = options.getStartY();
+    screenElements[id].originalyPos = options.getStartY();
+    screenElements[id].weight = options.weight;
+    screenElements[id].velocity = 0;
+    screenElements[id].affectGravity = options.affectGravity;
+    screenElements[id].canRespawn = options.respawn;
+    screenElements[id].respawnTime = options.respawnTime;
+    screenElements[id].id = id;
+    screenElements[id].type = BLOCK;
+
+
+    id++;
+}
 
 
 void GameLib::updateScreen(){
+    Serial.println("updateScreen");
     _display->clearDisplay();
     for (int16_t index = 0; index < maxElem; index++ ){
         if(screenElements[index].affectGravity){
@@ -88,6 +117,7 @@ void GameLib::updateScreen(){
 // 
 
 void GameLib::calcGravity(Object element){
+    Serial.println("calcGravity");
     if(element.velocity == 0){
         element.velocity = 2;
     } else {
@@ -120,6 +150,7 @@ void GameLib::calcGravity(Object element){
 }
 
 void GameLib::handleElem(Object element){
+    Serial.println("handleElem");
     switch(element.type){
         case TEXT:
         displayText(element.xPos, element.yPos, element.data.textProperties.content);
@@ -132,6 +163,7 @@ void GameLib::handleElem(Object element){
 }
 
 void GameLib::displayText(int xPos, int yPos, const char* content){
+    Serial.println("displayText");
     _display->setCursor(xPos, yPos);
     _display->println(content);
 }
