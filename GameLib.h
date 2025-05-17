@@ -5,9 +5,11 @@ class TextOptions {
     private:
         int x = 0;
         int y = 0;
+        int respawnTime = 40;
         int weight = 0;
         const char* text = "";
         bool affectGravity = false;
+        bool respawn = false;
     
     public:
         TextOptions& setPosition(int x, int y) {
@@ -32,6 +34,16 @@ class TextOptions {
             return *this;
         }
 
+        TextOptions& setCanRespawn(bool respawn){
+            this->respawn = respawn;
+            return *this;
+        }
+
+        TextOptions& setRespawnTime(int respawnTime){
+            this->respawnTime = respawnTime;
+            return *this;
+        }
+
         int getX() const {
             return this->x;
         }
@@ -52,6 +64,13 @@ class TextOptions {
             return this->affectGravity;
         }
     
+        bool canRespawn() const {
+            return this->respawn;
+        }
+
+        int getRespawnTime() const {
+            return this-> respawnTime;
+        }
         friend class GameLib;
     };
     

@@ -3,6 +3,8 @@
 #include <Adafruit_GFX.h>;
 
 #define maxElem 10
+#define screenHeight 64
+
 
 int16_t id = 0;
 enum ElementType { TEXT };
@@ -14,9 +16,13 @@ struct TextProperties{
 struct Object{
     int xPos;
     int yPos;
+    int originalyPos;
     int weight;
     float velocity;
     bool affectGravity;
+    bool canRespawn;
+    int respawnTime;
+    int respawnFrame;
     int id;
     ElementType type;
     union {
@@ -48,9 +54,12 @@ void GameLib::begin() {
 
     screenElements[id].xPos = options.getX();
     screenElements[id].yPos = options.getY();
+    screenElements[id].originalyPos = options.getY();
     screenElements[id].weight = options.weight;
     screenElements[id].velocity = 0;
     screenElements[id].affectGravity = options.affectGravity;
+    screenElements[id].canRespawn = options.respawn;
+    screenElements[id].respawnTime = options.respawnTime;
     screenElements[id].data.textProperties = txt;
     screenElements[id].id = id;
     screenElements[id].type = TEXT;
@@ -90,8 +99,24 @@ void GameLib::calcGravity(Object element){
         element.velocity = 20;
     }
     
-    screenElements[element.id].velocity = element.velocity;
-    screenElements[element.id].yPos = element.yPos + element.velocity;
+    if(element.yPos > (screenHeight + 10)){
+        if(element.canRespawn){
+            if(element.respawnFrame == element.respawnTime){
+                element.yPos = element.originalyPos;
+                screenElements[element.id].velocity = 0;
+                screenElements[element.id].respawnFrame = 0;
+                screenElements[element.id].yPos = element.yPos;
+            } else {
+                screenElements[element.id].respawnFrame = element.respawnFrame + 1;
+
+            }
+            } 
+        } else {
+            screenElements[element.id].velocity = element.velocity;
+            screenElements[element.id].yPos = element.yPos + element.velocity;
+
+        }
+
 }
 
 void GameLib::handleElem(Object element){
