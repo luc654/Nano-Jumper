@@ -7,16 +7,18 @@
 
 
 int16_t id = 0;
-enum ElementType { TEXT, BLOCK };
+enum ElementType { TEXT, 
+    // BLOCK
+ };
 
 struct TextProperties{
     const char* content;
 };
-struct BlockProperties{
-    bool collision;
-    int endX;
-    int endY;
-};
+// struct BlockProperties{
+//     bool collision;
+//     int endX;
+//     int endY;
+// };
 struct Object{
     int xPos;
     int yPos;
@@ -76,25 +78,25 @@ void GameLib::begin() {
     id++;
 }
 
-void GameLib::addBlock(const BlockOptions& options){
-    Serial.println("addBlock");
-    if (id > maxElem) { return; }
-    BlockProperties blk = { options.hasCollision(), options.getEndX(), options.getEndY() };
+// void GameLib::addBlock(const BlockOptions& options){
+//     Serial.println("addBlock");
+//     if (id > maxElem) { return; }
+//     BlockProperties blk = { options.hasCollision(), options.getEndX(), options.getEndY() };
     
-    screenElements[id].xPos = options.getStartX();
-    screenElements[id].yPos = options.getStartY();
-    screenElements[id].originalyPos = options.getStartY();
-    screenElements[id].weight = options.weight;
-    screenElements[id].velocity = 0;
-    screenElements[id].affectGravity = options.affectGravity;
-    screenElements[id].canRespawn = options.respawn;
-    screenElements[id].respawnTime = options.respawnTime;
-    screenElements[id].id = id;
-    screenElements[id].type = BLOCK;
+//     screenElements[id].xPos = options.getStartX();
+//     screenElements[id].yPos = options.getStartY();
+//     screenElements[id].originalyPos = options.getStartY();
+//     screenElements[id].weight = options.weight;
+//     screenElements[id].velocity = 0;
+//     screenElements[id].affectGravity = options.affectGravity;
+//     screenElements[id].canRespawn = options.respawn;
+//     screenElements[id].respawnTime = options.respawnTime;
+//     screenElements[id].id = id;
+//     screenElements[id].type = BLOCK;
 
 
-    id++;
-}
+//     id++;
+// }
 
 
 void GameLib::updateScreen(){
